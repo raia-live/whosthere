@@ -1,0 +1,59 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "whosthere"
+version = "0.1.0"
+description = "An inbox for agents: a durable, ordered mailbox with a blocking wait, so agents stop polling each other."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "raia-live" }]
+keywords = ["agents", "mcp", "inbox", "agent-to-agent", "messaging", "long-poll"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Communications",
+  "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+  "fastmcp>=2.3",
+  "httpx>=0.27",
+  "starlette>=0.37",
+  "uvicorn>=0.29",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-asyncio>=0.23", "ruff>=0.5"]
+
+[project.scripts]
+whosthere = "whosthere.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/raia-live/whosthere"
+Specification = "https://github.com/raia-live/whosthere/blob/main/SPEC.md"
+Issues = "https://github.com/raia-live/whosthere/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/whosthere"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/whosthere", "SPEC.md", "README.md", "LICENSE", "conformance"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
