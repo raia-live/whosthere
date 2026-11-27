@@ -6,6 +6,8 @@ import json
 import threading
 import time
 
+import pytest
+
 from whosthere import cli
 
 
@@ -40,3 +42,20 @@ def test_knock_from_the_cli(tmp_path, capsys, monkeypatch):
     db = tmp_path / "relay.db"
     e = _run(capsys, monkeypatch, db, "knock", "--as", "alice", "--to", "bob", "--space", "team", "hello")
     assert (e["from"], e["to"], e["text"]) == ("alice", "bob", "hello")
+
+
+def test_agent_required_without_as_or_env(tmp_path, capsys, monkeypatch):
+    db = tmp_path / "relay.db"
+    monkeypatch.setenv("WHOSTHERE_DB", str(db))
+    monkeypatch.delenv("WHOSTHERE_AGENT", raising=False)
+    monkeypatch.delenv("WHOSTHERE_URL", raising=False)
+    with pytest.raises(SystemExit) as exc:
+        cli.main(["peek"])
+    assert "is required" in str(exc.value)
+
+
+def test_whosthere_agent_env_used_when_as_missing(tmp_path, capsys, monkeypatch):
+    db = tmp_path / "relay.db"
+    monkeypatch.setenv("WHOSTHERE_AGENT", "bob")
+    assert _run(capsys, monkeypatch, db, "join", "team")["members"] == ["bob"]
+    assert _run(capsys, monkeypatch, db, "peek")["count"] == 0
