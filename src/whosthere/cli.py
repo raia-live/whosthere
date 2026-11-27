@@ -97,7 +97,7 @@ def build_parser() -> argparse.ArgumentParser:
         sp.add_argument("--space")
 
     j = sub.add_parser("join", help="join a space")
-    _agent(j)
+    j.add_argument("--as", dest="as_agent", help="your agent name (or WHOSTHERE_AGENT)")
     j.add_argument("space_name", metavar="space")
     j.set_defaults(fn=cmd_join)
 
