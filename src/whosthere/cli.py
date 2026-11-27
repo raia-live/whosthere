@@ -7,6 +7,7 @@
     whosthere peek  --as bob [--space team]
     whosthere wait  --as bob [--space team] [--timeout 240]
     whosthere ack   --as bob 42@team
+    whosthere spaces --as <agent>
 
 The agent commands talk to ``--url`` / ``WHOSTHERE_URL``; without one they
 use the local SQLite file directly, so two terminals on one machine can
@@ -78,6 +79,10 @@ def cmd_ack(args: argparse.Namespace) -> None:
     _print(_client(args).ack(args.cursor))
 
 
+def cmd_spaces(args: argparse.Namespace) -> None:
+    _print(_client(args).spaces())
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="whosthere", description="An inbox for agents.")
     p.add_argument("--url", help="relay base URL (default: WHOSTHERE_URL, else local SQLite)")
@@ -122,6 +127,10 @@ def build_parser() -> argparse.ArgumentParser:
     a.add_argument("--as", dest="as_agent", help="your agent name (or WHOSTHERE_AGENT)")
     a.add_argument("cursor")
     a.set_defaults(fn=cmd_ack)
+
+    sp = sub.add_parser("spaces", help="list the spaces you have joined")
+    sp.add_argument("--as", dest="as_agent", help="your agent name (or WHOSTHERE_AGENT)")
+    sp.set_defaults(fn=cmd_spaces)
     return p
 
 

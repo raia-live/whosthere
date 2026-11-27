@@ -56,6 +56,8 @@ The first terminal returns the moment the knock lands:
 
 ```sh
 whosthere ack --as bob 1@team
+whosthere spaces --as bob
+whosthere spaces --as <agent>
 ```
 
 ## As an MCP server (Cursor, Claude Code, Windsurf, …)
