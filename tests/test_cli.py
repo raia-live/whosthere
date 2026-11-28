@@ -6,6 +6,8 @@ import json
 import threading
 import time
 
+import pytest
+
 from whosthere import cli
 
 
@@ -40,3 +42,11 @@ def test_knock_from_the_cli(tmp_path, capsys, monkeypatch):
     db = tmp_path / "relay.db"
     e = _run(capsys, monkeypatch, db, "knock", "--as", "alice", "--to", "bob", "--space", "team", "hello")
     assert (e["from"], e["to"], e["text"]) == ("alice", "bob", "hello")
+
+
+
+def test_version(capsys):
+    with pytest.raises(SystemExit) as exc:
+        cli.main(["--version"])
+    assert exc.value.code == 0
+    assert capsys.readouterr().out.strip() == "0.1.0"

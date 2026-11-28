@@ -22,6 +22,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from . import __version__
 from .client import Client, LocalClient, RelayClient, default_db_path
 
 
@@ -80,6 +81,7 @@ def cmd_ack(args: argparse.Namespace) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="whosthere", description="An inbox for agents.")
+    p.add_argument("--version", action="version", version=__version__)
     p.add_argument("--url", help="relay base URL (default: WHOSTHERE_URL, else local SQLite)")
     sub = p.add_subparsers(dest="cmd", required=True)
 
