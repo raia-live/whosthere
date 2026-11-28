@@ -3,6 +3,7 @@
     whosthere relay [--host 127.0.0.1] [--port 7777] [--db ~/.whosthere/relay.db]
     whosthere mcp                      # stdio MCP server (see mcp_server.py)
     whosthere join  --as bob team
+    whosthere spaces --as bob
     whosthere knock --as alice --to bob --space team "text"
     whosthere peek  --as bob [--space team]
     whosthere wait  --as bob [--space team] [--timeout 240]
@@ -61,6 +62,10 @@ def cmd_join(args: argparse.Namespace) -> None:
     _print(_client(args).join(args.space_name))
 
 
+def cmd_spaces(args: argparse.Namespace) -> None:
+    _print(_client(args).spaces())
+
+
 def cmd_knock(args: argparse.Namespace) -> None:
     space = args.space or os.environ.get("WHOSTHERE_SPACE", "default")
     _print(_client(args).knock(space=space, to=args.to, text=args.text, kind=args.kind, thread=args.thread))
@@ -100,6 +105,10 @@ def build_parser() -> argparse.ArgumentParser:
     _agent(j)
     j.add_argument("space_name", metavar="space")
     j.set_defaults(fn=cmd_join)
+
+    sp = sub.add_parser("spaces", help="list the spaces you have joined")
+    sp.add_argument("--as", dest="as_agent", help="your agent name (or WHOSTHERE_AGENT)")
+    sp.set_defaults(fn=cmd_spaces)
 
     k = sub.add_parser("knock", help="send a message")
     _agent(k)

@@ -37,6 +37,7 @@ pip install whosthere        # or: uv tool install whosthere
 
 ```sh
 whosthere join  --as bob team
+whosthere spaces --as bob
 whosthere wait  --as bob --space team          # blocks
 # in another terminal
 whosthere knock --as alice --to bob --space team "can you look at the pricing table?"
