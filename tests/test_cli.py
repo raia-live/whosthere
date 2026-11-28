@@ -6,6 +6,8 @@ import json
 import threading
 import time
 
+import pytest
+
 from whosthere import cli
 
 
@@ -40,3 +42,10 @@ def test_knock_from_the_cli(tmp_path, capsys, monkeypatch):
     db = tmp_path / "relay.db"
     e = _run(capsys, monkeypatch, db, "knock", "--as", "alice", "--to", "bob", "--space", "team", "hello")
     assert (e["from"], e["to"], e["text"]) == ("alice", "bob", "hello")
+
+
+def test_join_does_not_accept_space_flag(tmp_path, monkeypatch):
+    monkeypatch.setenv("WHOSTHERE_DB", str(tmp_path / "relay.db"))
+    monkeypatch.delenv("WHOSTHERE_URL", raising=False)
+    with pytest.raises(SystemExit):
+        cli.main(["join", "--as", "bob", "--space", "team", "team"])

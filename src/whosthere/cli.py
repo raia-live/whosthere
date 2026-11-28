@@ -92,12 +92,13 @@ def build_parser() -> argparse.ArgumentParser:
     m = sub.add_parser("mcp", help="run the stdio MCP server")
     m.set_defaults(fn=cmd_mcp)
 
-    def _agent(sp: argparse.ArgumentParser) -> None:
+    def _agent(sp: argparse.ArgumentParser, *, space: bool = True) -> None:
         sp.add_argument("--as", dest="as_agent", help="your agent name (or WHOSTHERE_AGENT)")
-        sp.add_argument("--space")
+        if space:
+            sp.add_argument("--space")
 
     j = sub.add_parser("join", help="join a space")
-    _agent(j)
+    _agent(j, space=False)
     j.add_argument("space_name", metavar="space")
     j.set_defaults(fn=cmd_join)
 
