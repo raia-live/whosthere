@@ -40,3 +40,10 @@ def test_knock_from_the_cli(tmp_path, capsys, monkeypatch):
     db = tmp_path / "relay.db"
     e = _run(capsys, monkeypatch, db, "knock", "--as", "alice", "--to", "bob", "--space", "team", "hello")
     assert (e["from"], e["to"], e["text"]) == ("alice", "bob", "hello")
+
+
+def test_spaces_from_the_cli(tmp_path, capsys, monkeypatch):
+    db = tmp_path / "relay.db"
+    _run(capsys, monkeypatch, db, "join", "--as", "bob", "team")
+    _run(capsys, monkeypatch, db, "join", "--as", "bob", "other")
+    assert _run(capsys, monkeypatch, db, "spaces", "--as", "bob") == ["other", "team"]
